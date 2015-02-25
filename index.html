@@ -99,6 +99,7 @@
       <md-card-content>
         <!--<p style="text-align: center" 
            ng-if="todos.length == 0">とくになし</p>-->
+        
         <md-list>
           <md-item 
             ng-repeat="(key,item) in todos" 
@@ -122,6 +123,25 @@
               </span>
               <span flex="20">{{ importance[item.importance-1] }}</span>
               <span flex="10"><md-checkbox ng-model="item.isDone" aria-label="Done"></md-checkbox></span>
+            </md-item-content>
+          </md-item>
+        </md-list>
+      </md-card-content>
+    </md-card>
+    
+    <md-card id="viewer" ng-controller="viewer">
+      <md-subheader class="md-warn">やったこと</md-subheader>
+      <md-card-content>
+        <md-list>
+          <md-item 
+            ng-repeat="(key,item) in todos" 
+            ng-if="item.isDone" 
+            ng-class="(item.importance > 3)? 'important' : ''"
+            class="fadable" >
+            <md-item-content layout="row">
+              <p flex="60" style="padding: 0 10px;">{{item.title}}</p>
+              <span flex="30">{{item.category}}</span>
+              <span flex="10"><md-button ng-click="vanish(key, $event)" aria-label="Done">削除</md-button></span>
             </md-item-content>
           </md-item>
         </md-list>

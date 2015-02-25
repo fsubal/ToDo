@@ -16,7 +16,7 @@ app.controller("container", function($scope, $mdToast, $animate, storage) {
   $scope.categories = ["なし","食事","勉強","仕事","趣味","その他"];
   $scope.importance = ["最悪やらなくてOK", "さほど", "ふつう", "重要", "他を犠牲にしてでも"];
   
-  // Toastのデフォルト設定
+  // Toastの表示設定
   var setting = { bottom: true, top: false, left: false, right: true };
   var getPos = function() {
     return Object.keys(setting).filter(function(pos) { return setting[pos]; }).join(' ');
@@ -24,7 +24,6 @@ app.controller("container", function($scope, $mdToast, $animate, storage) {
   $scope.toast = function(str) {
     $mdToast.show( $mdToast.simple().content(str).position(getPos()).hideDelay(3000) );
   };
-
 });
 
 app.controller("adder", function($scope) {
@@ -69,7 +68,7 @@ app.controller("categorizer", function($scope) {
 
 });
 
-app.controller("viewer", function($scope) {
+app.controller("viewer", function($scope, $mdDialog) {
   $scope.restBefore = function(date){
     // jsonにはDateオブジェクトをそのまま格納できない？ので文字列かどうか判定
     if(typeof date === "string") date = new Date(date);
@@ -91,5 +90,18 @@ app.controller("viewer", function($scope) {
     
     return {remained: remained, isYabai: isYabai};
   }
+  
+  $scope.vanish = function(key, ev) {
+    var confirm = $mdDialog.confirm()
+      .title("削除してよろしいですか？")
+      .content("履歴から完全に削除します．この操作は取り消せません．")
+      .ariaLabel("削除してよろしいですか？")
+      .ok("はい")
+      .cancel("いいえ")
+      .targetEvent(ev);
+    $mdDialog.show(confirm).then(function() {
+      $scope.todos.splice(key, 1);
+    });
+  };
 
 });
