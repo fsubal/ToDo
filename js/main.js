@@ -82,7 +82,8 @@ app.controller("viewer", function($scope, $mdDialog) {
     if(r[1] > 0){ remained = "残り" + r[1] + "月"; }else 
     if(r[2] > 7){ remained = "残り" + parseInt(r[2]/7) + "週";}
     else{ 
-      remained = (r[2]<1)? "今日中"
+      remained = (r[2]<0)? "超過"
+               : (r[2]<1)? "今日中"
                : (r[2]<2)? "明日中"
                : "残り"+r[2]+"日";
       isYabai = (r[2]<1)? true : false;
