@@ -24,5 +24,6 @@ Objectに追加する際に入力内容はStringに変換されるため，明�
 - 締め切りまでの予定日数が表示される．
     - 予定まで残り1日を切ると，期限の部分が赤文字になって炎のアイコンが出現する．
     - 超過した場合も炎アイコンは出続ける．
+    - 炎アイコンは[このサイト](http://www.pd4pic.com/red-sign-black-icon-science-outline-symbol-fire.html) からお借りしました．感謝．
   
   
