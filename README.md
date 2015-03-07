@@ -15,6 +15,7 @@ AngularJS使用，Chrome 40.0.2214.115 (64-bit) にて動作確認．
 
 ... TodoはObject型で保持し，ローカルストレージにバインド．
 Objectに追加する際に入力内容はStringに変換されるため，明示的なHTMLエスケープはしていない．
+(<?php echo ?>や<a>タグ，eval()やconsole.log()を書いて問題が起こらないことを確認済み．)
 しかし，予定名や期限がundefinedだった場合に警告を出す仕組みはあり．
 
 ## 使い方・追加機能
@@ -25,6 +26,5 @@ Objectに追加する際に入力内容はStringに変換されるため，明�
 - 締め切りまでの予定日数が表示される．
     - 予定まで残り1日を切ると，期限の部分が赤文字になって炎のアイコンが出現する．
     - 超過した場合も炎アイコンは出続ける．
-    - 炎アイコンは[このサイト](http://www.pd4pic.com/red-sign-black-icon-science-outline-symbol-fire.html)からお借りしました．感謝．
-  
+    - 炎アイコンは[このサイト](http://www.pd4pic.com/red-sign-black-icon-science-outline-symbol-fire.html)から，コルクボードは[このサイト](http://free-texture.net/wood/corkboard01.html)からお借りしました．感謝．
   
