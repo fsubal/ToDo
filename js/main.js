@@ -103,7 +103,7 @@ app.controller("viewer", function($scope, $mdDialog) {
     if(r[1]>0){
       remained = (r[1]==1 && r[2]<0)? (r[2]+$scope.month(today[0],today[1]))+"日後" : r[1]+"ヶ月後"; 
       }else 
-    if(r[2]>=7){ remained = parseInt(r[2]/7) + "後";}
+    if(r[2]>=7){ remained = parseInt(r[2]/7) + "週後";}
     else{ 
       remained = (r[2]<0)? "超過"
                : (r[2]<1)? "今日中"
