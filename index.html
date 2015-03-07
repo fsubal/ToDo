@@ -10,8 +10,27 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.7.1/angular-material.min.css">
     
     <style>    
-      // http://www.pd4pic.com/red-sign-black-icon-science-outline-symbol-fire.html
+      /* 
+       * http://www.pd4pic.com/red-sign-black-icon-science-outline-symbol-fire.html
+       * http://free-texture.net/wood/corkboard01.html
+       */
       html { font-family: "Roboto"; }
+      body { 
+        background-image: url('cork.jpg');
+        background-size: contain;
+        }
+      md-content.md-default-theme { background-color: transparent; min-width: 600px; }
+      md-card { background: #fff; }
+      
+      #adder {
+          display: flex; !important;
+          transition: 0.3s linear all;
+          opacity: 1;
+      }
+      #adder.ng-hide {
+          display: flex; !important;
+          opacity: 0;
+      }
       .fadable {
           transition: 0.5s linear all;
           opacity: 1;
@@ -36,6 +55,33 @@
       md-list md-item-content span {
           font-size: 0.85em;
       }
+      i { font-style: normal; }
+      
+      .category { 
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.7em;
+        text-align: center;
+      }
+      .category.none{ 
+        background: #ddd;
+      }
+      .category.meal{
+        background: #fdd;
+      }
+      .category.study{
+        background: #dfd;
+      }      
+      .category.work{
+        background: #ddf;
+      }
+      .category.hobby{
+        background: #fdd;
+      }      
+      .category.others{
+        background: #dff;
+      }
+      
     </style>
     
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular.min.js"></script>
@@ -47,13 +93,16 @@
     <script src="js/main.js"></script>
   </head>
   <body layout="column" ng-controller="container">
-  <md-content>
+  <md-content style="padding: 0 5%;">
     <md-card layout="row">
-      <h2 class="md-toolbar-tools" flex="70">
-        今日は{{::today[0]}}年{{::today[1]}}月{{::today[2]}}日（{{::week[today[3]]}}）
+      <h2 class="md-toolbar-tools" flex="90">
+        やるべきことリスト ｜ {{::today[0]}}年{{::today[1]}}月{{::today[2]}}日（{{::week[today[3]]}}）
       </h2>
+      <md-button flex="10" ng-click="addable = !addable">
+        <img src="pencil.svg" width="24" height="24" />
+      </md-button>
     </md-card>
- <md-card id="adder" ng-controller="adder">
+ <md-card id="adder" ng-controller="adder" ng-show="addable">
       <md-card-content style="overflow: hidden;">
         <p style="color: rgba(0,0,0,0.54); font-size: 0.75em;" flex="15">「*」は必須項目</p>
         <div layout layout="row">
@@ -66,7 +115,7 @@
         
         <!-- カテゴリ -->
         <md-input-container flex="30">
-          <h5 style="color: rgba(0,0,0,0.54); font-weight: normal; margin: 10px 0;">やることのカテゴリ</h5>
+          <h5 style="color: rgba(0,0,0,0.54); font-weight: normal; margin: 10px 0;">カテゴリ</h5>
           <select ng-model="todo.category" placeholder="カテゴリ" ng-options="c for c in categories">
           </select>
         </md-input-container>
@@ -74,13 +123,14 @@
         
         <div layout layout-sm="column">
         <!-- 期日 -->
-        <md-input-container flex="40">
+        <md-input-container flex="45">
           <label>いつまでに*</label>
+          <!--<input ng-model="todo.deadline" type="datetime-local" min="{{::today[0]+'-'+zero(today[1])+'-'+zero(today[2])+'T00:00'}}" max="2099-12-31T00:00" step="60">-->
           <input ng-model="todo.deadline" type="date" min="{{::today[0]+'-'+zero(today[1])+'-'+zero(today[2])}}" max="2099-12-31">
         </md-input-container>
 
         <!-- 重要度 -->
-        <md-input-container flex="60">
+        <md-input-container flex="55">
             <h5 style="color: rgba(0,0,0,0.54); font-weight: normal; margin: 0;">
               優先度*: {{importance[todo.importance-1]}}
             </h5>
@@ -88,13 +138,13 @@
             </md-slider>
         </md-input-container> 
         </div>        
-        <md-button flex="85" class="md-raised md-primary" ng-click="add()">
+        <md-button class="md-raised md-primary" ng-click="add()">
           追加する
         </md-button>
       </md-card-content>
     </md-card>
     
-    <md-card id="viewer" ng-controller="viewer">
+    <md-card class="viewer" ng-controller="viewer">
       <md-subheader class="md-warn">やるべきこと</md-subheader>
       <md-card-content>
         <!--<p style="text-align: center" 
@@ -107,11 +157,12 @@
             ng-class="(item.importance > 3)? 'important' : ''"
             class="fadable" >
             <md-item-content layout="row">
-              <p flex="40" style="padding: 0 10px;">{{item.title}}</p>
-              <span flex="10">{{item.category}}</span>
-              <span flex="10" ng-class="(restBefore(item.deadline).isYabai)? 'isYabai' : ''">
-                {{ restBefore(item.deadline).remained }}
-              </span>
+              <p flex="40" style="padding: 0 10px;">{{::item.title}}</p>
+              <p flex="10"><span class="category" ng-class="classes[item.category]">{{::item.category}}</span></p>
+              <p flex="10" ng-class="(restBefore(item.deadline).isYabai)? 'isYabai' : ''">
+                <span>{{restBefore(item.deadline).remained}}</span>
+                <md-tooltip>{{Stringify(item.deadline)}}</md-tooltip>
+              </p>
               <span flex="10">
                 <img
                  ng-show="restBefore(item.deadline).isYabai"
@@ -121,27 +172,34 @@
                  src="fire.png"
                  alt="This is Really Yabai!!!" />
               </span>
-              <span flex="20">{{ importance[item.importance-1] }}</span>
-              <span flex="10"><md-checkbox ng-model="item.isDone" aria-label="Done"></md-checkbox></span>
+              <span flex="10">{{ importance[item.importance-1] }}</span>
+              <span flex="10"><md-button ng-click="vanish(key, $event)" aria-label="Done">削除</md-button></span>
+              <span flex="10">
+                <md-checkbox ng-model="item.isDone" aria-label="Done"></md-checkbox>
+                <md-tooltip>終わったら押す</md-tooltip>
+              </span>
             </md-item-content>
           </md-item>
         </md-list>
       </md-card-content>
     </md-card>
     
-    <md-card id="viewer" ng-controller="viewer">
+    <md-card class="viewer" ng-controller="viewer">
       <md-subheader class="md-warn">やったこと</md-subheader>
       <md-card-content>
         <md-list>
           <md-item 
             ng-repeat="(key,item) in todos" 
             ng-if="item.isDone" 
-            ng-class="(item.importance > 3)? 'important' : ''"
             class="fadable" >
             <md-item-content layout="row">
               <p flex="60" style="padding: 0 10px;">{{item.title}}</p>
-              <span flex="30">{{item.category}}</span>
+              <p flex="20"><span class="category" ng-class="classes[item.category]">{{item.category}}</span></p>
               <span flex="10"><md-button ng-click="vanish(key, $event)" aria-label="Done">削除</md-button></span>
+              <span flex="10">
+                  <md-checkbox ng-model="item.isDone" aria-label="Done"></md-checkbox>
+                  <md-tooltip>まだ終わってなかった</md-tooltip>
+              </span>
             </md-item-content>
           </md-item>
         </md-list>
